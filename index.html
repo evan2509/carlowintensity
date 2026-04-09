@@ -6,150 +6,228 @@
   <title>Carlow Intensity Index Analysis</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      color-scheme: light;
-      --bg: #eef4ff;
+      --bg: #f1f5f1;
       --surface: #ffffff;
-      --surface-strong: #f8fbff;
-      --text: #0f172a;
-      --muted: #475569;
-      --border: rgba(71, 85, 105, 0.18);
-      --accent: #2563eb;
-      --accent-soft: rgba(37, 99, 235, 0.12);
+      --surface-raised: #f7faf7;
+      --text: #0d1a10;
+      --muted: #52685a;
+      --muted-light: #8da898;
+      --border: rgba(0, 80, 35, 0.12);
+      --border-strong: rgba(0, 80, 35, 0.22);
+      --accent: #006b2b;
+      --accent-soft: rgba(0, 107, 43, 0.09);
+      --gold: #c49b18;
     }
-    * {
-      box-sizing: border-box;
-    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(180deg, var(--bg) 0%, #f7fbff 100%);
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
       color: var(--text);
+      -webkit-font-smoothing: antialiased;
     }
+
+    /* ── Page layout ── */
     .page {
-      max-width: 1100px;
+      max-width: 980px;
       margin: 0 auto;
-      padding: 28px 20px 48px;
+      padding: 36px 20px 64px;
     }
+
+    /* ── Header ── */
     header {
-      display: grid;
-      gap: 8px;
-      margin-bottom: 22px;
+      margin-bottom: 36px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 28px;
     }
+
     header h1 {
-      margin: 0;
-      font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
-      font-size: clamp(2rem, 2.6vw, 3rem);
-      letter-spacing: -0.04em;
+      margin: 0 0 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      letter-spacing: -0.045em;
       font-weight: 700;
+      line-height: 1.05;
     }
-    header .subtitle {
-      display: inline-block;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--surface-strong);
-      color: var(--muted);
+
+    .header-sub {
+      margin: 8px 0 0;
       font-size: 0.95rem;
       font-weight: 600;
-      width: fit-content;
+      color: var(--muted);
     }
+
+    /* ── Cards ── */
     .cards {
       display: grid;
-      gap: 28px;
-      margin-bottom: 32px;
+      gap: 24px;
     }
+
     .chart-card {
       background: var(--surface);
-      border: 1px solid rgba(71, 85, 105, 0.12);
-      border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
-      padding: 32px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
       overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.05);
     }
-    .chart-card h2 {
-      margin: 0 0 8px;
-      font-size: 1.4rem;
+
+    /* coloured top accent strip using the chart line colour */
+    .chart-card::before {
+      content: '';
+      display: block;
+      height: 4px;
+      background: var(--card-color, var(--accent));
+    }
+
+    /* ── Card header ── */
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 24px 28px 0;
+    }
+
+    .card-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .round-label {
+      font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: -0.03em;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--muted-light);
     }
-    .game-score {
-      margin: 0 0 20px;
-      color: var(--muted);
+
+    .card-title h2 {
+      margin: 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .card-title h2 em {
+      font-style: normal;
+      color: var(--card-color, var(--accent));
+    }
+
+    /* score block on the right */
+    .score-block {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .score-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted-light);
+      margin-bottom: 4px;
+    }
+
+    .score-line {
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 0.98rem;
       font-weight: 600;
+      color: var(--muted);
+      line-height: 1.5;
     }
+
+    .score-line .carlow {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    /* ── Chart area ── */
     .chart-container {
-      position: relative;
-      padding-top: 24px;
+      padding: 20px 28px 0;
     }
+
     .chart-shell {
-      background: rgba(15, 23, 42, 0.04);
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      border-radius: 22px;
-      padding: 18px;
-      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.03);
+      position: relative;
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 16px 12px;
     }
+
     canvas {
       width: 100% !important;
-      max-height: 340px;
-      border-radius: 16px;
-      background: transparent;
+      max-height: 300px;
       display: block;
     }
-    .ht-marker {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      height: 100%;
-      width: 2px;
-      background: rgba(125, 167, 255, 0.45);
-      pointer-events: none;
-    }
-    .ht-label {
-      position: absolute;
-      top: -24px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.8rem;
-      color: var(--muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-    }
-    .meta-pills {
+
+    /* ── Stat row ── */
+    .stat-row {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
+      gap: 0;
+      margin: 20px 28px 24px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
     }
-    .data-pill {
-      display: inline-flex;
+
+    .stat-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.04);
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      color: var(--text);
-      font-size: 0.95rem;
-      min-width: 180px;
+      padding: 14px 12px;
+      background: var(--surface-raised);
+      gap: 3px;
+      border-right: 1px solid var(--border);
     }
-    .data-pill strong {
+
+    .stat-item:last-child {
+      border-right: none;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
       font-weight: 700;
-      color: var(--accent-soft);
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted-light);
     }
-    .summary-cards {
-      display: none;
+
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--card-color, var(--accent));
     }
-    .summary-card,
-    .summary-stat {
-      display: none;
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .card-header {
+        padding: 20px 20px 0;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .score-block { text-align: left; }
+
+      .chart-container { padding: 16px 20px 0; }
+
+      .stat-row { margin: 16px 20px 20px; }
+
+      .card-title h2 { font-size: 1.4rem; }
+
+      .stat-value { font-size: 1.15rem; }
     }
   </style>
 </head>
@@ -157,54 +235,107 @@
   <article class="page">
     <header>
       <h1>Carlow Intensity Index Analysis</h1>
-      <p class="subtitle">NHL 1B • Dr. Cullen Park • 2026 Home Games</p>
+      <p class="header-sub">Carlow NHL 1B Home Games 2026</p>
     </header>
 
     <section class="cards">
-      <section class="chart-card">
-        <h2>Round 1 • Down</h2>
-        <p class="game-score">Score: Carlow 2–1 Down</p>
-        <div class="chart-container">
-          <div class="ht-label">HT</div>
-          <div class="ht-marker"></div>
-          <div class="chart-shell"><canvas id="chartDown"></canvas></div>
+
+      <section class="chart-card" style="--card-color: rgb(31, 120, 255)">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="round-label">Round 1</span>
+            <h2>v <em>Down</em></h2>
+          </div>
+          <div class="score-block">
+            <p class="score-label">Final Score</p>
+            <p class="score-line"><span class="carlow">Carlow 2–18</span> · Down 1–11</p>
+          </div>
         </div>
-        <div class="meta-pills">
-          <span class="data-pill"><strong>Intensity</strong> 4.8</span>
-          <span class="data-pill"><strong>Opp poss</strong> 9:44</span>
-          <span class="data-pill"><strong>Key actions</strong> 44</span>
+        <div class="chart-container">
+          <div class="chart-shell">
+            <canvas id="chartDown"></canvas>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-item">
+            <span class="stat-label">Intensity Index</span>
+            <span class="stat-value">4.8</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Opp. Poss. Time</span>
+            <span class="stat-value">9:44</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Key Actions</span>
+            <span class="stat-value">44</span>
+          </div>
         </div>
       </section>
 
-      <section class="chart-card">
-        <h2>Round 5 • Clare</h2>
-        <p class="game-score">Score: Carlow 1–1 Clare</p>
-        <div class="chart-container">
-          <div class="ht-label">HT</div>
-          <div class="ht-marker"></div>
-          <div class="chart-shell"><canvas id="chartClare"></canvas></div>
+      <section class="chart-card" style="--card-color: rgb(16, 185, 129)">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="round-label">Round 5</span>
+            <h2>v <em>Clare</em></h2>
+          </div>
+          <div class="score-block">
+            <p class="score-label">Final Score</p>
+            <p class="score-line"><span class="carlow">Carlow 0–18</span> · Clare 1–28</p>
+          </div>
         </div>
-        <div class="meta-pills">
-          <span class="data-pill"><strong>Intensity</strong> 2.8</span>
-          <span class="data-pill"><strong>Opp poss</strong> 11:53</span>
-          <span class="data-pill"><strong>Key actions</strong> 33</span>
+        <div class="chart-container">
+          <div class="chart-shell">
+            <canvas id="chartClare"></canvas>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-item">
+            <span class="stat-label">Intensity Index</span>
+            <span class="stat-value">2.8</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Opp. Poss. Time</span>
+            <span class="stat-value">11:53</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Key Actions</span>
+            <span class="stat-value">33</span>
+          </div>
         </div>
       </section>
 
-      <section class="chart-card">
-        <h2>Round 7 • Dublin</h2>
-        <p class="game-score">Score: Carlow 2–0 Dublin</p>
-        <div class="chart-container">
-          <div class="ht-label">HT</div>
-          <div class="ht-marker"></div>
-          <div class="chart-shell"><canvas id="chartDublin"></canvas></div>
+      <section class="chart-card" style="--card-color: rgb(234, 88, 12)">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="round-label">Round 7</span>
+            <h2>v <em>Dublin</em></h2>
+          </div>
+          <div class="score-block">
+            <p class="score-label">Final Score</p>
+            <p class="score-line"><span class="carlow">Carlow 2–14</span> · Dublin 0–34</p>
+          </div>
         </div>
-        <div class="meta-pills">
-          <span class="data-pill"><strong>Intensity</strong> 3.5</span>
-          <span class="data-pill"><strong>Opp poss</strong> 14:57</span>
-          <span class="data-pill"><strong>Key actions</strong> 52</span>
+        <div class="chart-container">
+          <div class="chart-shell">
+            <canvas id="chartDublin"></canvas>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-item">
+            <span class="stat-label">Intensity Index</span>
+            <span class="stat-value">3.5</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Opp. Poss. Time</span>
+            <span class="stat-value">14:57</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Key Actions</span>
+            <span class="stat-value">52</span>
+          </div>
         </div>
       </section>
+
     </section>
   </article>
 
@@ -213,15 +344,13 @@
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: {
-          display: false
-        },
+        legend: { display: false },
         tooltip: {
           mode: 'nearest',
           intersect: false,
-          backgroundColor: 'rgba(17, 24, 39, 0.92)',
+          backgroundColor: 'rgba(13, 26, 16, 0.92)',
           titleColor: '#fff',
-          bodyColor: '#fff',
+          bodyColor: 'rgba(255,255,255,0.75)',
           borderColor: 'rgba(255,255,255,0.08)',
           borderWidth: 1,
           padding: 12,
@@ -237,31 +366,30 @@
           title: {
             display: true,
             text: 'Time (minutes)',
-            color: 'rgba(148, 163, 184, 0.8)',
-            font: { size: 13, weight: '600' }
+            color: 'rgba(140, 165, 150, 0.9)',
+            font: { size: 12, weight: '600' }
           },
-          grid: { color: 'rgba(148, 163, 184, 0.12)' },
-          ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--muted') }
+          grid: { color: 'rgba(0, 80, 35, 0.07)' },
+          ticks: { color: '#8da898', font: { size: 12 } }
         },
         y: {
           title: {
             display: true,
             text: 'Intensity Index',
-            color: 'rgba(148, 163, 184, 0.8)',
-            font: { size: 13, weight: '600' }
+            color: 'rgba(140, 165, 150, 0.9)',
+            font: { size: 12, weight: '600' }
           },
           beginAtZero: false,
           suggestedMin: 2.2,
-          suggestedMax: 5.8,
-          grid: { color: 'rgba(148, 163, 184, 0.12)' },
-          ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--muted') }
+          grid: { color: 'rgba(0, 80, 35, 0.07)' },
+          ticks: { color: '#8da898', font: { size: 12 } }
         }
       }
     };
 
     const defaultLabels = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70];
-    const downData = [5.2, 5.7, 5.1, 5.2, 4.8, 4.7, 5.4, 5.7, 5.5, 5.5, 5.2, 5.2, 5.0, 4.8];
-    const clareData = [2.8, 2.7, 4.0, 4.2, 3.9, 2.9, 3.1, 3.1, 3.2, 3.2, 3.1, 3.0, 2.9, 2.8];
+    const downData   = [5.2, 5.7, 5.1, 5.2, 4.8, 4.7, 5.4, 5.7, 5.5, 5.5, 5.2, 5.2, 5.0, 4.8];
+    const clareData  = [2.8, 2.7, 4.0, 4.2, 3.9, 2.9, 3.1, 3.1, 3.2, 3.2, 3.1, 3.0, 2.9, 2.8];
     const dublinData = [3.4, 2.8, 2.9, 3.0, 2.6, 2.8, 2.8, 3.2, 3.2, 3.2, 3.4, 3.5, 3.5, 3.5];
 
     const createChart = (ctx, label, data, color) => {
@@ -276,23 +404,77 @@
             backgroundColor: color,
             fill: false,
             tension: 0.42,
-            borderWidth: 3,
-            pointRadius: 5,
-            pointHoverRadius: 7,
+            borderWidth: 2.5,
+            pointRadius: 4,
+            pointHoverRadius: 6,
             pointBackgroundColor: '#fff',
             pointBorderColor: color,
-            pointBorderWidth: 2,
-            segment: {
-              borderColor: ctx => color
-            }
+            pointBorderWidth: 2
           }]
         },
         options: chartOptions
       });
     };
 
-    createChart(document.getElementById('chartDown'), 'Down', downData, 'rgb(31, 120, 255)');
-    createChart(document.getElementById('chartClare'), 'Clare', clareData, 'rgb(16, 185, 129)');
+    const htPlugin = {
+      id: 'htPlugin',
+      beforeDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        const xScale = chart.scales.x;
+        if (!xScale) return;
+
+        const htValue = 35;
+        const labelIndex = chart.data.labels.findIndex(l => l === htValue || l === String(htValue));
+        const x = labelIndex >= 0 ? xScale.getPixelForValue(labelIndex) : xScale.getPixelForValue(htValue);
+        const top = chart.chartArea.top;
+        const bottom = chart.chartArea.bottom;
+
+        ctx.save();
+        ctx.setLineDash([6, 5]);
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, bottom);
+        ctx.stroke();
+        ctx.restore();
+      },
+      afterDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        const xScale = chart.scales.x;
+        if (!xScale) return;
+
+        const htValue = 35;
+        const labelIndex = chart.data.labels.findIndex(l => l === htValue || l === String(htValue));
+        const x = labelIndex >= 0 ? xScale.getPixelForValue(labelIndex) : xScale.getPixelForValue(htValue);
+        const top = chart.chartArea.top;
+
+        const label = 'HT';
+        ctx.save();
+        ctx.font = '600 10px "Plus Jakarta Sans", system-ui, sans-serif';
+        const textWidth = ctx.measureText(label).width;
+        const pad = 8;
+        const lw = textWidth + pad * 2;
+        const lh = 18;
+        const lx = Math.min(Math.max(x - lw / 2, chart.chartArea.left), chart.chartArea.right - lw);
+        const ly = top + 6;
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.beginPath();
+        ctx.roundRect(lx, ly, lw, lh, 4);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.5)';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, lx + lw / 2, ly + lh / 2);
+        ctx.restore();
+      }
+    };
+
+    Chart.register(htPlugin);
+    createChart(document.getElementById('chartDown'),   'Down',   downData,   'rgb(31, 120, 255)');
+    createChart(document.getElementById('chartClare'),  'Clare',  clareData,  'rgb(16, 185, 129)');
     createChart(document.getElementById('chartDublin'), 'Dublin', dublinData, 'rgb(234, 88, 12)');
   </script>
 </body>
