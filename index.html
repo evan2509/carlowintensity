@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carlow GAA Intensity Analysis</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --surface-strong: #eef1f8;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: rgba(15, 23, 42, 0.08);
+      --accent: #1f78ff;
+      --accent-soft: rgba(31, 120, 255, 0.12);
+      --danger: #d14343;
+      --success: #1e7e34;
+    }
+    [data-theme='dark'] {
+      color-scheme: dark;
+      --bg: #090b11;
+      --surface: #111827;
+      --surface-strong: #1f2937;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: rgba(148, 163, 184, 0.18);
+      --accent: #7da7ff;
+      --accent-soft: rgba(125, 167, 255, 0.12);
+      --danger: #f46969;
+      --success: #5ecc8f;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, #dbeafe22 100%);
+      color: var(--text);
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+    }
+    header {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: clamp(2rem, 2.6vw, 3rem);
+      letter-spacing: -0.04em;
+    }
+    header p {
+      margin: 0;
+      max-width: 70ch;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      display: inline-flex;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface-strong);
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .cards {
+      display: grid;
+      gap: 24px;
+    }
+    .chart-card,
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.06);
+      padding: 28px;
+      overflow: hidden;
+    }
+    .chart-card h2,
+    .summary-card h2 {
+      margin: 0 0 14px;
+      font-size: 1.28rem;
+    }
+    .chart-meta {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+    canvas {
+      width: 100% !important;
+      max-height: 360px;
+    }
+    .note {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .summary-item {
+      background: var(--bg);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 18px;
+    }
+    .summary-item strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .summary-item span {
+      display: block;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    button.theme-toggle {
+      border: 1px solid var(--border);
+      background: var(--surface-strong);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.18s ease, background-color 0.18s ease;
+    }
+    button.theme-toggle:hover {
+      transform: translateY(-1px);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid transparent;
+    }
+    .badge strong {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <article class="page" id="page">
+    <header>
+      <div class="top-bar">
+        <div>
+          <p class="pill">NHL 1B • Dr. Cullen Park • 2026 Home Games</p>
+        </div>
+        <button class="theme-toggle" id="themeToggle">Switch theme</button>
+      </div>
+      <h1>Carlow Home Game Intensity Analysis</h1>
+      <p>Three game intensity trajectories for Carlow against Down, Clare, and Dublin. Each graph shows how momentum and ball movement shifted across the match, with a summary of the key tactical patterns at the bottom.</p>
+    </header>
+
+    <section class="cards">
+      <section class="chart-card">
+        <h2>Round 1 • Carlow 2-18 Down 1-14</h2>
+        <div class="chart-meta">
+          <span>Down game intensity rose steadily in the second half.</span>
+          <span class="badge"><strong>Home advantage:</strong> strong transition work</span>
+        </div>
+        <canvas id="chartDown"></canvas>
+        <div class="note">This game shows Carlow maintaining intensity after halftime. The more stable line reflects Carlow’s control through transition and strong attacking tempo.</div>
+      </section>
+
+      <section class="chart-card">
+        <h2>Round 5 • Carlow 0-18 Clare 1-28</h2>
+        <div class="chart-meta">
+          <span>Clare carried sustained possession and the intensity remained elevated.</span>
+          <span class="badge"><strong>Key insight:</strong> Clare controlled the ball well</span>
+        </div>
+        <canvas id="chartClare"></canvas>
+        <div class="note">Clare and Dublin had a lot of possession. Carlow could not get near them as they used the ball well. Clare mixed long ball with patient build-up, but the dominant pattern was steady pressure and confident possession.</div>
+      </section>
+
+      <section class="chart-card">
+        <h2>Round 7 • Carlow 2-14 Dublin 0-34</h2>
+        <div class="chart-meta">
+          <span>Dublin’s intensity climbed as they repeatedly worked through the short puckout.</span>
+          <span class="badge"><strong>Game flow:</strong> Dublin dictated with possession</span>
+        </div>
+        <canvas id="chartDublin"></canvas>
+        <div class="note">In the Dublin game Carlow dropped back and allowed the short puckout, and Dublin easily worked through the lines. The chart shows growing confidence and control as the game progressed.</div>
+      </section>
+    </section>
+
+    <section class="summary-card">
+      <h2>Overall match summary</h2>
+      <p>Across the three home games, the Down match had a clear rhythm and competitive momentum for Carlow, while Clare and Dublin were dominant in possession and effective in their movement. The strongest trends came from Dublin’s line-breaking play from the short puckout and Clare’s ability to mix possession with direct delivery.</p>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <strong>Down</strong>
+          <span>Rewarding turnover moments and consistent second-half intensity, translating into a strong home win.</span>
+        </div>
+        <div class="summary-item">
+          <strong>Clare</strong>
+          <span>Controlled possession with sharp ball retention. Carlow struggled to press and Clare punished the space.</span>
+        </div>
+        <div class="summary-item">
+          <strong>Dublin</strong>
+          <span>Short puckout success and fluid through-ball combinations. Carlow retreated and Dublin worked through the lines.</span>
+        </div>
+        <div class="summary-item">
+          <strong>Venue view</strong>
+          <span>Dr. Cullen Park was Carlow’s base, but the two later fixtures highlighted the need for stronger pressure and quicker ball recovery.</span>
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <script>
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          mode: 'nearest',
+          intersect: false,
+          backgroundColor: 'rgba(17, 24, 39, 0.92)',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          borderColor: 'rgba(255,255,255,0.08)',
+          borderWidth: 1,
+          padding: 12,
+          callbacks: {
+            label: function(context) {
+              return `Intensity: ${context.formattedValue}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(148, 163, 184, 0.12)' },
+          ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--muted') }
+        },
+        y: {
+          beginAtZero: false,
+          suggestedMin: 2.2,
+          suggestedMax: 5.5,
+          grid: { color: 'rgba(148, 163, 184, 0.12)' },
+          ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--muted') }
+        }
+      }
+    };
+
+    const defaultLabels = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70];
+    const downData = [3.4, 2.8, 2.9, 3.0, 2.6, 2.8, 2.8, 3.2, 3.2, 3.2, 3.4, 3.5, 3.5, 3.5];
+    const clareData = [3.7, 4.0, 4.1, 4.2, 4.4, 4.3, 4.5, 4.4, 4.6, 4.5, 4.3, 4.1, 4.0, 3.9];
+    const dublinData = [3.8, 4.2, 4.4, 4.6, 4.8, 4.7, 4.9, 4.8, 5.0, 4.9, 5.1, 5.2, 5.1, 5.0];
+
+    const createChart = (ctx, label, data, color) => {
+      return new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: defaultLabels,
+          datasets: [{
+            label,
+            data,
+            borderColor: color,
+            backgroundColor: color,
+            fill: false,
+            tension: 0.42,
+            borderWidth: 3,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: color,
+            pointBorderWidth: 2,
+            segment: {
+              borderColor: ctx => color
+            }
+          }]
+        },
+        options: chartOptions
+      });
+    };
+
+    createChart(document.getElementById('chartDown'), 'Down', downData, 'rgb(31, 120, 255)');
+    createChart(document.getElementById('chartClare'), 'Clare', clareData, 'rgb(16, 185, 129)');
+    createChart(document.getElementById('chartDublin'), 'Dublin', dublinData, 'rgb(234, 88, 12)');
+
+    const page = document.getElementById('page');
+    const toggle = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('pageTheme') || 'light';
+    page.setAttribute('data-theme', currentTheme);
+    toggle.textContent = currentTheme === 'dark' ? 'Light mode' : 'Dark mode';
+
+    toggle.addEventListener('click', () => {
+      const next = page.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      page.setAttribute('data-theme', next);
+      localStorage.setItem('pageTheme', next);
+      toggle.textContent = next === 'dark' ? 'Light mode' : 'Dark mode';
+    });
+  </script>
+</body>
+</html>
