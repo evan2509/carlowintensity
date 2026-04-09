@@ -37,27 +37,28 @@
     .page {
       max-width: 980px;
       margin: 0 auto;
-      padding: 36px 20px 64px;
+      padding: 40px 24px 60px;
     }
 
     /* ── Header ── */
     header {
-      margin-bottom: 36px;
+      margin-bottom: 32px;
       border-bottom: 1px solid var(--border);
       padding-bottom: 28px;
     }
 
     header h1 {
-      margin: 0 0 10px;
+      margin: 0;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-size: clamp(1.6rem, 3.5vw, 2.8rem);
       letter-spacing: -0.045em;
       font-weight: 700;
       line-height: 1.05;
+      white-space: nowrap;
     }
 
     .header-sub {
-      margin: 8px 0 0;
+      margin: 10px 0 0;
       font-size: 0.95rem;
       font-weight: 600;
       color: var(--muted);
@@ -66,7 +67,7 @@
     /* ── Cards ── */
     .cards {
       display: grid;
-      gap: 24px;
+      gap: 20px;
     }
 
     .chart-card {
@@ -77,7 +78,7 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.05);
     }
 
-    /* coloured top accent strip using the chart line colour */
+    /* coloured top accent strip */
     .chart-card::before {
       content: '';
       display: block;
@@ -91,13 +92,13 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
-      padding: 24px 28px 0;
+      padding: 24px 24px 0;
     }
 
     .card-title {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
     }
 
     .round-label {
@@ -123,7 +124,7 @@
       color: var(--card-color, var(--accent));
     }
 
-    /* score block on the right */
+    /* score block */
     .score-block {
       text-align: right;
       flex-shrink: 0;
@@ -135,15 +136,15 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted-light);
-      margin-bottom: 4px;
+      margin: 0 0 4px;
     }
 
     .score-line {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.98rem;
+      font-size: 0.95rem;
       font-weight: 600;
       color: var(--muted);
-      line-height: 1.5;
+      white-space: nowrap;
     }
 
     .score-line .carlow {
@@ -153,7 +154,7 @@
 
     /* ── Chart area ── */
     .chart-container {
-      padding: 20px 28px 0;
+      padding: 20px 24px 0;
     }
 
     .chart-shell {
@@ -161,7 +162,7 @@
       background: var(--surface-raised);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 16px 16px 12px;
+      padding: 16px 16px 10px;
     }
 
     canvas {
@@ -174,8 +175,7 @@
     /* ── Stat row ── */
     .stat-row {
       display: flex;
-      gap: 0;
-      margin: 20px 28px 24px;
+      margin: 20px 24px 24px;
       border: 1px solid var(--border);
       border-radius: 12px;
       overflow: hidden;
@@ -186,9 +186,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 14px 12px;
+      padding: 14px 8px;
       background: var(--surface-raised);
-      gap: 3px;
+      gap: 4px;
       border-right: 1px solid var(--border);
     }
 
@@ -197,11 +197,12 @@
     }
 
     .stat-label {
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       font-weight: 700;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted-light);
+      white-space: nowrap;
     }
 
     .stat-value {
@@ -214,29 +215,31 @@
 
     /* ── Mobile ── */
     @media (max-width: 640px) {
-      .card-header {
-        padding: 20px 20px 0;
-        flex-direction: column;
-        gap: 10px;
-      }
+      .page { padding: 24px 16px 48px; }
+
+      header { margin-bottom: 24px; padding-bottom: 20px; }
+
+      header h1 { font-size: clamp(1rem, 5.2vw, 1.6rem); }
+
+      .header-sub { font-size: 0.85rem; margin-top: 8px; }
+
+      .cards { gap: 16px; }
+
+      .card-header { padding: 20px 16px 0; gap: 12px; }
 
       .score-block { text-align: left; }
 
-      .chart-container { padding: 16px 20px 0; }
+      .chart-container { padding: 16px 16px 0; }
 
-      canvas { max-height: 240px; }
+      canvas { height: 240px !important; max-height: 240px; }
 
-      .stat-row { margin: 16px 20px 20px; }
+      .stat-row { margin: 16px 16px 20px; }
 
-      .stat-item { padding: 12px 6px; }
+      .stat-item { padding: 12px 6px; gap: 3px; }
 
-      .stat-label {
-        font-size: 0.6rem;
-        letter-spacing: 0.04em;
-        white-space: nowrap;
-      }
+      .stat-label { font-size: 0.58rem; letter-spacing: 0.04em; }
 
-      .card-title h2 { font-size: 1.4rem; }
+      .card-title h2 { font-size: 1.35rem; }
 
       .stat-value { font-size: 1.1rem; }
     }
