@@ -55,29 +55,40 @@
     }
     .cards {
       display: grid;
-      gap: 24px;
-      margin-bottom: 36px;
+      gap: 28px;
+      margin-bottom: 32px;
     }
     .chart-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.06);
-      padding: 28px;
+      background: rgba(17, 24, 39, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 34px 90px rgba(0, 0, 0, 0.22);
+      padding: 32px;
       overflow: hidden;
     }
     .chart-card h2 {
-      margin: 0 0 20px;
-      font-size: 1.28rem;
+      margin: 0 0 18px;
+      font-size: 1.4rem;
       font-weight: 700;
+      letter-spacing: -0.03em;
     }
     .chart-container {
       position: relative;
-      padding-top: 20px;
+      padding-top: 24px;
+    }
+    .chart-shell {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
     }
     canvas {
       width: 100% !important;
-      max-height: 360px;
+      max-height: 340px;
+      border-radius: 16px;
+      background: transparent;
+      display: block;
     }
     .ht-marker {
       position: absolute;
@@ -86,59 +97,49 @@
       transform: translateX(-50%);
       height: 100%;
       width: 2px;
-      background: rgba(125, 167, 255, 0.5);
+      background: rgba(125, 167, 255, 0.45);
       pointer-events: none;
     }
     .ht-label {
       position: absolute;
-      top: 0;
+      top: -24px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--muted);
-      font-weight: 600;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       white-space: nowrap;
     }
-    .summary-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
     }
-    .summary-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.06);
-      padding: 24px;
-    }
-    .summary-card h3 {
-      margin: 0 0 18px;
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-    .summary-stat {
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .summary-stat:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-    .summary-stat strong {
-      display: block;
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 6px;
-      font-weight: 600;
-    }
-    .summary-stat span {
-      display: block;
-      font-size: 1.15rem;
+    .data-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       color: var(--text);
-      font-weight: 600;
-      line-height: 1.6;
+      font-size: 0.95rem;
+      min-width: 180px;
+    }
+    .data-pill strong {
+      font-weight: 700;
+      color: var(--accent-soft);
+    }
+    .summary-cards {
+      display: none;
+    }
+    .summary-card,
+    .summary-stat {
+      display: none;
     }
   </style>
 </head>
@@ -155,7 +156,12 @@
         <div class="chart-container">
           <div class="ht-label">HT</div>
           <div class="ht-marker"></div>
-          <canvas id="chartDown"></canvas>
+          <div class="chart-shell"><canvas id="chartDown"></canvas></div>
+        </div>
+        <div class="meta-pills">
+          <span class="data-pill"><strong>Intensity</strong> 5.2 – 4.8</span>
+          <span class="data-pill"><strong>Opp poss</strong> 9:44</span>
+          <span class="data-pill"><strong>Key actions</strong> 44</span>
         </div>
       </section>
 
@@ -164,7 +170,12 @@
         <div class="chart-container">
           <div class="ht-label">HT</div>
           <div class="ht-marker"></div>
-          <canvas id="chartClare"></canvas>
+          <div class="chart-shell"><canvas id="chartClare"></canvas></div>
+        </div>
+        <div class="meta-pills">
+          <span class="data-pill"><strong>Intensity</strong> 2.8 – 2.8</span>
+          <span class="data-pill"><strong>Opp poss</strong> 11:53</span>
+          <span class="data-pill"><strong>Key actions</strong> 33</span>
         </div>
       </section>
 
@@ -173,43 +184,12 @@
         <div class="chart-container">
           <div class="ht-label">HT</div>
           <div class="ht-marker"></div>
-          <canvas id="chartDublin"></canvas>
+          <div class="chart-shell"><canvas id="chartDublin"></canvas></div>
         </div>
-      </section>
-    </section>
-
-    <section class="summary-card">
-      <h2>Overall match summary</h2>
-      <p>Across the three home games, the Down match had a clear rhythm and competitive momentum for Carlow, while Clare and Dublin were dominant in possession and effective in their movement. The strongest trends came from Dublin’s line-breaking play from the short puckout and Clare’s ability to mix possession with direct delivery.</p>
-      <div class="summary-grid">
-        <div class="summary-item">
-          <strong>Down</strong>
-          <span>Rewarding turnover moments and consistent second-half intensity, translating into a strong home win.</span>
-        </div>
-        <div class="summary-item">
-          <strong>Clare</strong>
-          <span>Controlled possession with sharp ball retention. Carlow struggled to press and Clare punished the space.</span>
-        </div>
-        <div class="summary-item">
-          <strong>Dublin</strong>
-          <span>Short puckout success and fluid through-ball combinations. Carlow retreated and Dublin worked through the lines.</span>
-        </div>
-        <div class="summary-item">
-      </section>
-
-      <section class="summary-card">
-        <h3>Dublin (52 Key Actions)</h3>
-        <div class="summary-stat">
-          <strong>Intensity Rating</strong>
-          <span>3.4–3.5</span>
-        </div>
-        <div class="summary-stat">
-          <strong>Opposition Possession</strong>
-          <span>14:57</span>
-        </div>
-        <div class="summary-stat">
-          <strong>Note</strong>
-          <span style="font-size: 0.95rem;">Dublin had dominant possession. Carlow dropped back and allowed the short puckout—Dublin easily worked through the lines. Very confident in possession.</span>
+        <div class="meta-pills">
+          <span class="data-pill"><strong>Intensity</strong> 3.4 – 3.5</span>
+          <span class="data-pill"><strong>Opp poss</strong> 14:57</span>
+          <span class="data-pill"><strong>Key actions</strong> 52</span>
         </div>
       </section>
     </section>
