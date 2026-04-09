@@ -166,6 +166,7 @@
 
     canvas {
       width: 100% !important;
+      height: 300px !important;
       max-height: 300px;
       display: block;
     }
@@ -223,11 +224,21 @@
 
       .chart-container { padding: 16px 20px 0; }
 
+      canvas { max-height: 240px; }
+
       .stat-row { margin: 16px 20px 20px; }
+
+      .stat-item { padding: 12px 6px; }
+
+      .stat-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
 
       .card-title h2 { font-size: 1.4rem; }
 
-      .stat-value { font-size: 1.15rem; }
+      .stat-value { font-size: 1.1rem; }
     }
   </style>
 </head>
@@ -240,7 +251,7 @@
 
     <section class="cards">
 
-      <section class="chart-card" style="--card-color: rgb(31, 120, 255)">
+      <section class="chart-card" style="--card-color: rgb(220, 38, 38)">
         <div class="card-header">
           <div class="card-title">
             <span class="round-label">Round 1</span>
@@ -272,7 +283,7 @@
         </div>
       </section>
 
-      <section class="chart-card" style="--card-color: rgb(16, 185, 129)">
+      <section class="chart-card" style="--card-color: rgb(217, 119, 6)">
         <div class="card-header">
           <div class="card-title">
             <span class="round-label">Round 5</span>
@@ -304,7 +315,7 @@
         </div>
       </section>
 
-      <section class="chart-card" style="--card-color: rgb(234, 88, 12)">
+      <section class="chart-card" style="--card-color: rgb(56, 152, 220)">
         <div class="card-header">
           <div class="card-title">
             <span class="round-label">Round 7</span>
@@ -380,7 +391,8 @@
             font: { size: 12, weight: '600' }
           },
           beginAtZero: false,
-          suggestedMin: 2.2,
+          min: 2,
+          max: 6,
           grid: { color: 'rgba(0, 80, 35, 0.07)' },
           ticks: { color: '#8da898', font: { size: 12 } }
         }
@@ -473,9 +485,9 @@
     };
 
     Chart.register(htPlugin);
-    createChart(document.getElementById('chartDown'),   'Down',   downData,   'rgb(31, 120, 255)');
-    createChart(document.getElementById('chartClare'),  'Clare',  clareData,  'rgb(16, 185, 129)');
-    createChart(document.getElementById('chartDublin'), 'Dublin', dublinData, 'rgb(234, 88, 12)');
+    createChart(document.getElementById('chartDown'),   'Down',   downData,   'rgb(220, 38, 38)');
+    createChart(document.getElementById('chartClare'),  'Clare',  clareData,  'rgb(217, 119, 6)');
+    createChart(document.getElementById('chartDublin'), 'Dublin', dublinData, 'rgb(56, 152, 220)');
   </script>
 </body>
 </html>
