@@ -350,6 +350,38 @@
         </div>
       </section>
 
+      <section class="chart-card" style="--card-color: rgb(139, 92, 246)">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="round-label">First Half Only</span>
+            <h2>v <em>Waterford</em></h2>
+          </div>
+          <div class="score-block">
+            <p class="score-label">HT Score</p>
+            <p class="score-line">Waterford 2–13 · <span class="carlow">Carlow 1–12</span></p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-shell">
+            <canvas id="chartWaterford"></canvas>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-item">
+            <span class="stat-label">Intensity Index</span>
+            <span class="stat-value">4.3</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Opp. Poss. Time</span>
+            <span class="stat-value">4:46</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Key Actions</span>
+            <span class="stat-value">21</span>
+          </div>
+        </div>
+      </section>
+
     </section>
   </article>
 
@@ -434,6 +466,7 @@
     const htPlugin = {
       id: 'htPlugin',
       beforeDatasetsDraw(chart) {
+        if (chart.config.options?.htLineDisabled) return;
         const ctx = chart.ctx;
         const xScale = chart.scales.x;
         if (!xScale) return;
@@ -455,6 +488,7 @@
         ctx.restore();
       },
       afterDatasetsDraw(chart) {
+        if (chart.config.options?.htLineDisabled) return;
         const ctx = chart.ctx;
         const xScale = chart.scales.x;
         if (!xScale) return;
@@ -487,10 +521,38 @@
       }
     };
 
+    const waterfordLabels = [5, 10, 15, 20, 25, 30, 35];
+    const waterfordData   = [4.6, 4.2, 4.8, 4.2, 4.6, 4.6, 4.4];
+
     Chart.register(htPlugin);
     createChart(document.getElementById('chartDown'),   'Down',   downData,   'rgb(220, 38, 38)');
     createChart(document.getElementById('chartClare'),  'Clare',  clareData,  'rgb(217, 119, 6)');
     createChart(document.getElementById('chartDublin'), 'Dublin', dublinData, 'rgb(56, 152, 220)');
+
+    new Chart(document.getElementById('chartWaterford'), {
+      type: 'line',
+      data: {
+        labels: waterfordLabels,
+        datasets: [{
+          label: 'Waterford',
+          data: waterfordData,
+          borderColor: 'rgb(139, 92, 246)',
+          backgroundColor: 'rgb(139, 92, 246)',
+          fill: false,
+          tension: 0.42,
+          borderWidth: 2.5,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: 'rgb(139, 92, 246)',
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        ...chartOptions,
+        htLineDisabled: true,
+      }
+    });
   </script>
 </body>
 </html>
